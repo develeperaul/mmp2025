@@ -1,0 +1,30 @@
+<svg  viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-41.92" y="-41.92" width="117.84" height="117.84"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(20.96px);clip-path:url(#bgblur_0_4001_1260_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_ii_4001_1260)" data-figma-bg-blur-radius="41.92">
+<circle cx="17" cy="17" r="17" fill="#8E7762" fill-opacity="0.5"/>
+</g>
+<g clip-path="url(#clip1_4001_1260)">
+<path d="M11.6352 22.3648C11.2844 22.0141 11.2844 21.4453 11.6352 21.0945L19.9335 12.7963H14.9985C14.5025 12.7963 14.1003 12.3942 14.1003 11.8982C14.1003 11.4021 14.5025 11 14.9985 11H23V19.0015C23 19.4975 22.5979 19.8997 22.1018 19.8997C21.6058 19.8997 21.2037 19.4975 21.2037 19.0015V14.0666L12.9055 22.3648C12.5547 22.7156 11.9859 22.7156 11.6352 22.3648Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_ii_4001_1260" x="-41.92" y="-41.92" width="117.84" height="117.84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-21.8333" dy="21.8333"/>
+<feGaussianBlur stdDeviation="10.9167"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.032 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_4001_1260"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="21.8333" dy="-21.8333"/>
+<feGaussianBlur stdDeviation="10.9167"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.749569 0 0 0 0 0.318884 0 0 0 0 0.167196 0 0 0 0.032 0"/>
+<feBlend mode="normal" in2="effect1_innerShadow_4001_1260" result="effect2_innerShadow_4001_1260"/>
+</filter>
+<clipPath id="bgblur_0_4001_1260_clip_path" transform="translate(41.92 41.92)"><circle cx="17" cy="17" r="17"/>
+</clipPath><clipPath id="clip1_4001_1260">
+<rect width="12" height="12" fill="white" transform="translate(11 11)"/>
+</clipPath>
+</defs>
+</svg>
