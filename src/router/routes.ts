@@ -124,6 +124,24 @@ const routes: RouteRecordRaw[] = [
           auth: true,
         },
       },
+      {
+        path: '/ref/list',
+        name: 'ref-list',
+
+        component: () => import('pages/Ref/List.vue'),
+        meta: {
+          auth: true,
+        },
+      },
+      {
+        path: '/ref/history',
+        name: 'ref-history',
+
+        component: () => import('pages/Ref/History.vue'),
+        meta: {
+          auth: true,
+        },
+      },
     ],
   },
 
