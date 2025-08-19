@@ -4,6 +4,7 @@
       <div class="tw-grid">
         <div class="tw-relative">
           <base-icon
+            @click="$router.back"
             name="back"
             class="tw-w-6 tw-h-6 tw-text-back tw-absolute tw-left-0 tw-top-6"
           />
@@ -34,23 +35,30 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import PopupRef from 'src/components/PopupRef.vue'
-const isPopupRef = ref(false)
-const closePopupRef = () => {
-  isPopupRef.value = false
-}
-const openSuccess = ref(false)
-const tab = ref('1')
-const tabs = [
-  {
-    id: '1',
-    name: 'Новые',
-  },
-  {
-    id: '2',
-    name: 'Активные',
-  },
-]
+  import { list as getReferrals } from 'src/api/referrals'
+  import PopupRef from 'src/components/PopupRef.vue'
+  import useRequest from 'src/composables/useRequest'
+
+  const isPopupRef = ref(false)
+  const closePopupRef = () => {
+    isPopupRef.value = false
+  }
+  const openSuccess = ref(false)
+  const tab = ref('1')
+  const tabs = [
+    {
+      id: '1',
+      name: 'Новые',
+    },
+    {
+      id: '2',
+      name: 'Активные',
+    },
+  ];
+
+  const { data } = useRequest(() => getReferrals({ type: 'active' }), {
+    errorText: 'Не удалось загрузить историю!',
+  });
 </script>
 <style lang="scss" scoped>
 .success {
