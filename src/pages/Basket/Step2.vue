@@ -38,28 +38,29 @@
           </div>
           <div
             class="tw-shrink-0 tw-p-3.5 tw-rounded-lg tw-bg-white tw-border tw-border-white tw-max-w-[120px] tw-grid tw-grid-rows-[35px_1fr]"
-            :class="tab === 4 ? ' !tw-border-primary_orange' : ''"
-            @click="choice(4)"
+            :class="tab === 7 ? ' !tw-border-primary_orange' : ''"
+            @click="choice(7)"
           >
             <img src="src/assets/icons/pochta.svg" class="tw-self-center" />
             <div class="tw-text-sm tw-whitespace-nowrap">Почта России</div>
           </div>
           <div
+            v-if="!isMeg"
             class="tw-shrink-0 tw-p-3.5 tw-rounded-lg tw-bg-white tw-border tw-border-white tw-max-w-[120px] tw-grid tw-grid-rows-[35px_1fr]"
-            :class="tab === 5 ? ' !tw-border-primary_orange' : ''"
-            @click="choice(5)"
+            :class="tab === 4 ? ' !tw-border-primary_orange' : ''"
+            @click="choice(4)"
           >
             <img src="src/assets/icons/megafon.svg" class="tw-self-center" />
             <div class="tw-text-sm tw-whitespace-nowrap">В салоне</div>
           </div>
-          <div
+          <!-- <div
             class="tw-shrink-0 tw-p-3.5 tw-rounded-lg tw-bg-white tw-border tw-border-white tw-max-w-[120px] tw-grid tw-grid-rows-[35px_1fr]"
             :class="tab === 6 ? ' !tw-border-primary_orange' : ''"
             @click="choice(6)"
           >
             <img src="src/assets/icons/esim.svg" class="tw-self-center" />
             <div class="tw-text-sm tw-whitespace-nowrap">eSIM</div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -246,6 +247,52 @@
           >
         </div>
       </div>
+
+      <div v-if="tab === 7" class="type-content">
+        <div class="type-content__title">Почта России</div>
+
+        <div style="display: grid; gap: 15px">
+          <base-input
+            v-model="pochta.index_city"
+            maska="######"
+            placeholder="Введите индекс"
+            class=""
+          />
+          <base-input
+            v-model="pochta.address"
+            placeholder="Введите адрес"
+            class=""
+          />
+        </div>
+        <base-button
+          v-if="pochta.index_city.length === 6 && pochta.address.length > 3"
+          class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+          @click="getPayment"
+          >Оплатить</base-button
+        >
+      </div>
+      <div v-if="tab === 4" class="type-content">
+        <div class="type-content__title">Салон Мегафон</div>
+
+        <div style="display: grid; gap: 15px">
+          <base-input
+            v-model="megafon.city"
+            placeholder="Введите город"
+            class=""
+          />
+          <base-input
+            v-model="megafon.address"
+            placeholder="Введите адрес"
+            class=""
+          />
+        </div>
+        <base-button
+          v-if="megafon.city.length > 3 && megafon.address.length > 3"
+          class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+          @click="getPayment"
+          >Оплатить</base-button
+        >
+      </div>
       <!-- <div v-if="tab === 2"></div>
       <div v-if="tab === 3"></div>
       <div v-if="tab === 4"></div>
@@ -272,7 +319,7 @@ import { useRoute } from 'vue-router'
 const tab = ref(1)
 const $q = useQuasar()
 const route = useRoute()
-
+const isMeg = ref(route.query.isMeg)
 const isPopup = ref(false)
 const popupMessage = ref('')
 
@@ -305,6 +352,15 @@ const addressCDEK = ref({
   entrance: '',
   intercom: '',
 })
+
+const pochta = ref({
+  index_city: '',
+  address: '',
+})
+const megafon = ref({
+  city: '',
+  address: '',
+})
 const getReceiving = async () => {
   const payload = {
     data: {
@@ -322,13 +378,13 @@ const getReceiving = async () => {
       deliveryRawAddress: 'тестовые данные',
     }
   }
-  // if (pickap.value === 4) {
-  //   payload.data = {
-  //     ...payload.data,
-  //     megafonOfficeCity: megafon_city.value,
-  //     megafonOfficeStreet: megafon_address.value,
-  //   };
-  // }
+  if (tab.value === 4) {
+    payload.data = {
+      ...payload.data,
+      megafonOfficeCity: megafon.value.city,
+      megafonOfficeStreet: megafon.value.address,
+    }
+  }
 
   if (tab.value === 5 && PVZItemCDEK.value) {
     payload.data = {
@@ -356,13 +412,13 @@ const getReceiving = async () => {
       }
     }
   }
-  // if (pickap.value === 7) {
-  //   payload.data = {
-  //     ...payload.data,
-  //     russianPostRawAddress: address.value,
-  //     russianPostPostalCode: index_city.value,
-  //   };
-  // }
+  if (tab.value === 7) {
+    payload.data = {
+      ...payload.data,
+      russianPostRawAddress: pochta.value.address,
+      russianPostPostalCode: pochta.value.index_city,
+    }
+  }
   // $q.loading.show({
   //   delay: 1,
   // });
@@ -475,6 +531,9 @@ const openCapacitorSite = async (url) => {
   // });
 }
 onMounted(() => {
+  if (route.query.orderId) {
+    localStorage.setItem('mmp_order_id', JSON.stringify(route.query.orderId))
+  }
   getRegionsCDEK()
 })
 

@@ -13,6 +13,7 @@
               :creatEd="
                 dayjs(order.createdAt).locale('ru').format('DD.MM.YYYY')
               "
+              :receiving="order.receiving?.method.description"
               @click="openOrder(order)"
             />
           </div>
@@ -41,9 +42,14 @@
           v-show="isPopupOrder"
           @close="closePopupOrder"
           :id="currentOrderOpen.ordinalId"
+          :orderId="currentOrderOpen.id"
           :creatEd="
             dayjs(currentOrderOpen.createdAt).locale('ru').format('DD.MM.YYYY')
           "
+          :items="currentOrderOpen.items"
+          :cost="currentOrderOpen.cost"
+          :receiving="currentOrderOpen.receiving?.method.description"
+          :status="currentOrderOpen.status"
         />
       </transition>
     </div>

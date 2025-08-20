@@ -50,8 +50,11 @@ export default defineStore('main', () => {
   const getTariffs = async (params: {
     [key: string]: string | number | boolean
   }) => {
+    let regionLk = JSON.parse(window.localStorage.region)
+    console.log(params)
+
     try {
-      const res = (await tariffs(params)).data
+      const res = (await tariffs({ ...params, regionId: regionLk.id })).data
       return tariffsAdapter(res)
     } catch (e) {
       throw e

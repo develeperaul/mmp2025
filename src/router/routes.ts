@@ -71,6 +71,15 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/profile/orders/:id/data',
+        name: 'data',
+        props: true,
+        component: () => import('pages/Profile/Data.vue'),
+        meta: {
+          auth: true,
+        },
+      },
+      {
         path: '/actions/:id',
         name: 'action',
         props: true,

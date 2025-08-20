@@ -15,7 +15,7 @@ export const createOrder = (
     count: number
   }[]
 ): Promise<DataObj<orderT>> => {
-  return api.mainKy.post('sim-card-orders', { json: payload }).json()
+  return api.mainKy.post('sim-card-orders', { json: { items: payload } }).json()
 }
 export const regionsCDEK = (): Promise<DataObj<RegionCDEKT[]>> => {
   return api.mainKy('receiving/cdek/regions').json()

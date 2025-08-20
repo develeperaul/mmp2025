@@ -14,7 +14,9 @@
         </div>
         <div class="tw-text-body_s tw-text-secondary">№ {{ id }}</div>
       </div>
-      <div class="tw-text-body_l tw-mt-3.5">Доставка курьером СДЭК</div>
+      <div class="tw-text-body_l tw-mt-3.5" v-if="receiving">
+        {{ receiving }}
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +24,7 @@
 const props = defineProps<{
   id: number
   creatEd: string
+  receiving?: string
 }>()
 </script>
 <style lang="scss" scoped></style>

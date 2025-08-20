@@ -91,10 +91,30 @@ export type orderT = {
     passportPhotos: []
   }
   mobileOperator: null | string
-  receiving: null | string
+
   region: null | string
   status: {
     value: number
     description: string
+  }
+  items: {
+    activationCost: number
+    count: number
+    itemCost: number
+    mobileTariff: {
+      id: number
+      mobileOperator: { id: number; name: string; isMegafon: boolean }
+      name: string
+    }
+    regionId: number
+    subscriptionFeeCost: number
+    totalActivationCost: number
+    totalItemCost: number
+    totalSubscriptionFeeCost: number
+  }[]
+  receiving: {
+    megafonOffice: { address: null | string; city: null | string }
+    method: { value: number; description: string }
+    region: null
   }
 }

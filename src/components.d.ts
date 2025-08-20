@@ -18,6 +18,7 @@ declare module 'vue' {
     copy: typeof import('./components/PopupOrder copy.vue')['default']
     EssentialLink: typeof import('./components/EssentialLink.vue')['default']
     ExampleComponent: typeof import('./components/ExampleComponent.vue')['default']
+    LoadFile: typeof import('./components/LoadFile.vue')['default']
     Order: typeof import('./components/Order.vue')['default']
     PopupOrder: typeof import('./components/PopupOrder.vue')['default']
     PopupRef: typeof import('./components/PopupRef.vue')['default']
