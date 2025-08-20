@@ -33,5 +33,9 @@ const props = withDefaults(
   &_border {
     @apply tw-bg-white tw-border tw-border-stroke50 tw-text-black;
   }
+
+  &:disabled {
+    opacity: 0.6 !important;
+  }
 }
 </style>

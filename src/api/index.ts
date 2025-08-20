@@ -21,16 +21,16 @@ export class Server {
           },
         ],
       },
-      timeout: option.timeout,
+      timeout: option.timeout ?? false,
     })
   }
 }
 
-export const api = new Server(process.env.BASE_URL, {
-  prefix: process.env.BASE_URL_PREFIX,
+export const api = new Server(process.env.BASE_URL!, {
+  prefix: process.env.BASE_URL_PREFIX!,
 })
 
-export const apiAuth = new Server(process.env.BASE_URL, {
-  prefix: process.env.BASE_URL_PREFIX,
+export const apiAuth = new Server(process.env.BASE_URL!, {
+  prefix: process.env.BASE_URL_PREFIX!,
   timeout: 60000,
 })

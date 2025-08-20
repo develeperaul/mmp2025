@@ -24,6 +24,7 @@ export default defineConfig((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'init',
+      'init-user',
       'global-registration',
       'registr-validators',
       'registr-router-hooks',
@@ -71,6 +72,7 @@ export default defineConfig((/* ctx */) => {
       env: {
         BASE_URL: 'https://crm-mmpartner.ru',
         BASE_URL_PREFIX: '/api/b2c/v1',
+        REF_BASE: 'https://web-mmpartner.ru',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

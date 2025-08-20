@@ -1,16 +1,17 @@
 <template>
   <div class="field">
-    <label class="tw-font-medium" v-if="label">
+    <label class="tw-font-medium" v-if="label && !hideLabel">
       {{ label }}
     </label>
     <div class="input__wrapper" :class="{ error: errorMessage }">
       <input
-        v-model="value"
         v-maska="maska"
+        :value="props.maska && props.unMask ? unMusked : value"
+        @input="onInput"
         @maska="onMaska"
         :type="type"
         class="input"
-        :placeholder="placeholder"
+        :placeholder="placeholder ?? ''"
         :disabled="disabled"
       />
       <svg
@@ -43,7 +44,7 @@ interface MaskaDetail {
 }
 const props = withDefaults(
   defineProps<{
-    modelValue: string
+    modelValue: string | number
     type?: string
     maska?: string
     name: string
@@ -51,12 +52,14 @@ const props = withDefaults(
     label?: string
     placeholder?: string
     disabled?: boolean
-    unMask?: boolean
+    unMask?: boolean,
+    hideLabel?: boolean
   }>(),
   {
     type: 'text',
     disabled: false,
     unMask: false,
+    hideLabel: false,
   }
 )
 const unMusked = ref('')
@@ -69,9 +72,16 @@ const emitsInput = defineEmits<{
 }>()
 const { name, rules, modelValue } = toRefs(props)
 const { errorMessage, value, meta } = useField(name, rules, {
-  validateOnValueUpdate: false,
+  validateOnValueUpdate: true,
   initialValue: modelValue,
+  label: props.label,
 })
+
+function onInput(e: Event) {
+  const target = e.target as HTMLInputElement;
+  value.value = props.maska && props.unMask ? unMusked.value : target.value;
+}
+
 watch(value, (val) => {
   if (props.unMask) emitsInput('update:modelValue', unMusked.value)
   else emitsInput('update:modelValue', val)
