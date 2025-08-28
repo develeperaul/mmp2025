@@ -3,9 +3,9 @@
     class="tw-bg-white tw-rounded-xl tw-px-5 tw-py-4 tw-grid tw-grid-cols-[53px_1fr] tw-gap-3.5"
   >
     <div>
-      <img src="src/assets/icons/megafon-sim.svg" alt="" />
-      <!-- <img src="src/assets/icons/mts-sim.svg" alt="" />
-                  <img src="src/assets/icons/beeline-sim.svg" alt="" /> -->
+      <img src="~assets/icons/megafon-sim.svg" alt="" />
+      <!-- <img src="~assets/icons/mts-sim.svg" alt="" />
+                  <img src="~assets/icons/beeline-sim.svg" alt="" /> -->
     </div>
     <div>
       <div class="">

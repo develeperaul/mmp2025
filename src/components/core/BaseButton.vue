@@ -1,6 +1,11 @@
 <template>
   <button class="btn" :class="[`btn_${theme}`, size ? `btn_${size}` : '']">
-    <slot />
+    <template v-if="load">
+      <q-spinner-tail color="white" />
+    </template>
+    <template v-else>
+      <slot />
+    </template>
   </button>
 </template>
 <script setup lang="ts">
@@ -8,6 +13,7 @@ const props = withDefaults(
   defineProps<{
     theme?: 'bg' | 'gradient' | 'border'
     size?: 'sm'
+    load?: boolean
   }>(),
   {
     theme: 'bg',

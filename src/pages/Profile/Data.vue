@@ -7,20 +7,31 @@
           <div class="tw-text-black tw-text-body_l tw-font-semibold tw-mb-2.5">
             Фамилия
           </div>
-          <base-input name="firstName" placeholder="Введите фамилию" />
+          <base-input
+            name="Фамилия"
+            v-model="firstName"
+            placeholder="Введите фамилию"
+            rules="required"
+          />
         </div>
         <div>
           <div class="tw-text-black tw-text-body_l tw-font-semibold tw-mb-2.5">
             Имя
           </div>
-          <base-input name="lastName" placeholder="Введите имя" />
+          <base-input
+            name="Имя"
+            v-model="lastName"
+            placeholder="Введите имя"
+            rules="required"
+          />
         </div>
         <div>
           <div class="tw-text-black tw-text-body_l tw-font-semibold tw-mb-2.5">
             Отчество
           </div>
           <base-input
-            name="patronymic"
+            name="Отчество"
+            v-model="patronymic"
             placeholder="Введите отчество (при наличии)"
           />
         </div>
@@ -28,7 +39,13 @@
           <div class="tw-text-black tw-text-body_l tw-font-semibold tw-mb-2.5">
             Дата рождения
           </div>
-          <base-input name="birthDate" placeholder="дд.мм.гггг" />
+          <base-input
+            name="Дата рождения"
+            v-model="birthDate"
+            placeholder="дд.мм.гггг"
+            rules="required|min:8"
+            maska="##.##.####"
+          />
         </div>
         <div>
           <div class="tw-mb-2.5 tw-font-semibold tw-text-body_l">
@@ -40,7 +57,9 @@
           </div>
           <load-file @loadFile="saveFormDataPassport" />
         </div>
-        <base-button type="submit"> Отправить </base-button>
+        <base-button type="submit" :load="loadSubmit" :disabled="loadSubmit">
+          Отправить
+        </base-button>
       </Form>
     </div>
   </q-page>
@@ -56,18 +75,31 @@ const router = useRouter()
 const saveFormDataPassport = (files) => {
   lefFiles.value = files
 }
-const submit = async (payload: {
-  firstName: string
-  lastName: string
-  patronymic: string
-  birthDate: string
-}) => {
+
+const firstName = ref('')
+const lastName = ref('')
+const patronymic = ref('')
+const birthDate = ref('')
+const loadSubmit = ref(false)
+const submit = async () => {
+  loadSubmit.value = true
   if (lefFiles.value.length > 1) {
     try {
-      await personalInfo(props.id, payload, lefFiles.value)
+      await personalInfo(
+        props.id,
+        {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          patronymic: patronymic.value,
+          birthDate: birthDate.value,
+        },
+        lefFiles.value
+      )
       router.push({ name: 'orders' })
     } catch (e) {
       throw e
+    } finally {
+      loadSubmit.value = false
     }
   }
 }

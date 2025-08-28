@@ -7,12 +7,13 @@ import {
   receivingInfo,
   regionsCDEK,
 } from 'src/api/delivery'
-import { RegionCDEKT } from 'src/models/api/delivery'
+import { orderT, RegionCDEKT } from 'src/models/api/delivery'
 import { RegionT, UpdateTariffItemT } from 'src/models/api/main'
 interface BasketItemI extends UpdateTariffItemT {
   count: number
 }
 export default defineStore('basket', () => {
+  const order = ref<orderT | null>(null)
   const basket = ref<{ [key: string | number]: BasketItemI[] }>({})
   const addTariff = (tariff: UpdateTariffItemT) => {
     let region = JSON.parse(localStorage.region) as { id: number; name: string }
@@ -88,6 +89,8 @@ export default defineStore('basket', () => {
     if (res) {
       window.localStorage.setItem('mmp_order_id', JSON.stringify(res.data.id))
     }
+    order.value = res.data
+    return res.data
   }
 
   const receivingOrder = async (payload: {
@@ -109,6 +112,24 @@ export default defineStore('basket', () => {
       throw e
     }
   }
+  const regionCDEKCourier = ref<RegionT | null>(null)
+  const regionListCDEKCourier = ref<RegionT[]>([])
+  const getRegionsCDEKCourier = async () => {
+    try {
+      const res = (await regionsCDEK()).data
+      if (res.length > 0) {
+        return (regionListCDEKCourier.value = res.map((i) => {
+          return {
+            id: i.code,
+            name: i.name,
+          }
+        }))
+      } else regionListCDEKCourier.value = []
+    } catch (e) {
+      throw e
+    }
+  }
+
   const regionCDEK = ref<RegionT | null>(null)
   const regionListCDEK = ref<RegionT[]>([])
   const getRegionsCDEK = async () => {
@@ -122,6 +143,25 @@ export default defineStore('basket', () => {
           }
         }))
       } else regionListCDEK.value = []
+    } catch (e) {
+      throw e
+    }
+  }
+  const cityCDEKCourier = ref<RegionT | null>(null)
+  const citiyListCDEKCourier = ref<RegionT[]>([])
+  const getCitiesCDEKCourier = async (id: number) => {
+    console.log(id)
+
+    try {
+      const res = (await citiesCDEK(id)).data
+      if (res.length > 0) {
+        return (citiyListCDEKCourier.value = res.map((i) => {
+          return {
+            id: i.code,
+            name: i.name,
+          }
+        }))
+      } else citiyListCDEKCourier.value = []
     } catch (e) {
       throw e
     }
@@ -166,15 +206,24 @@ export default defineStore('basket', () => {
   }
 
   return {
+    order,
     basket,
     addTariff,
     remove,
     rezet,
     create,
 
+    regionCDEKCourier,
+    regionListCDEKCourier,
+    getRegionsCDEKCourier,
+
     regionCDEK,
     regionListCDEK,
     getRegionsCDEK,
+
+    cityCDEKCourier,
+    citiyListCDEKCourier,
+    getCitiesCDEKCourier,
 
     getCitiesCDEK,
     cityCDEK,

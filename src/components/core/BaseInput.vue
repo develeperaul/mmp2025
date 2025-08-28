@@ -6,8 +6,7 @@
     <div class="input__wrapper" :class="{ error: errorMessage }">
       <input
         v-maska="maska"
-        :value="props.maska && props.unMask ? unMusked : value"
-        @input="onInput"
+        v-model="value"
         @maska="onMaska"
         :type="type"
         class="input"
@@ -52,7 +51,7 @@ const props = withDefaults(
     label?: string
     placeholder?: string
     disabled?: boolean
-    unMask?: boolean,
+    unMask?: boolean
     hideLabel?: boolean
   }>(),
   {
@@ -78,8 +77,8 @@ const { errorMessage, value, meta } = useField(name, rules, {
 })
 
 function onInput(e: Event) {
-  const target = e.target as HTMLInputElement;
-  value.value = props.maska && props.unMask ? unMusked.value : target.value;
+  const target = e.target as HTMLInputElement
+  value.value = props.maska && props.unMask ? unMusked.value : target.value
 }
 
 watch(value, (val) => {

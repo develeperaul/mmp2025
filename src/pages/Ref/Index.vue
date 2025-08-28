@@ -15,16 +15,25 @@
             за каждого приглашенного друга
           </div>
           <img
-            src="src/assets/images/peoples/group.png"
+            src="/src/assets/images/peoples/group.png"
             alt=""
             width="213"
             height="40"
           />
-          <base-button class="!tw-w-fit tw-flex tw-items-center tw-justify-center tw-gap-2" @click="copyRefLink">
+          <base-button
+            class="!tw-w-fit tw-flex tw-items-center tw-justify-center tw-gap-2"
+            @click="copyRefLink"
+          >
             <span>
-              {{ linkIsInBuffer ? 'Ссылка скопирована' : 'Ссылка для приглашения' }}
+              {{
+                linkIsInBuffer ? 'Ссылка скопирована' : 'Ссылка для приглашения'
+              }}
             </span>
-            <base-icon v-if="linkIsInBuffer" name="check2" class="tw-w-[20px] tw-h-[20px]" />
+            <base-icon
+              v-if="linkIsInBuffer"
+              name="check2"
+              class="tw-w-[20px] tw-h-[20px]"
+            />
           </base-button>
         </div>
         <!-- <div
@@ -41,7 +50,9 @@
             class="tw-bg-white tw-p-5 tw-rounded-xl tw-grid tw-justify-items-center tw-mb-5"
           >
             <div class="tw-text-body_l tw-mb-2.5">Реферальный счет</div>
-            <div class="tw-font-semibold tw-text-3xl tw-mb-4">{{ user.balance }} ₽</div>
+            <div class="tw-font-semibold tw-text-3xl tw-mb-4">
+              {{ user.balance }} ₽
+            </div>
             <div class="tw-flex tw-justify-center tw-gap-10">
               <router-link
                 :to="{ name: 'ref-account' }"
@@ -84,24 +95,24 @@
   </q-page>
 </template>
 <script setup lang="ts">
-  import useAuthStore from 'src/stores/authStore';
-  import DialogRules from 'src/components/Ref/DialogRules.vue';
+import useAuthStore from 'src/stores/authStore'
+import DialogRules from 'src/components/Ref/DialogRules.vue'
 
-  const authStore = useAuthStore();
-  const user = toRef(authStore, 'user');
-  const showedRules = ref(false);
-  const linkIsInBuffer = ref(false);
+const authStore = useAuthStore()
+const user = toRef(authStore, 'user')
+const showedRules = ref(false)
+const linkIsInBuffer = ref(false)
 
-  function copyRefLink() {
-    if(!user.value || linkIsInBuffer.value) return;
-    const base = process.env.REF_BASE ?? '';
-    navigator.clipboard
-      .writeText(base + '?referralCode=' + user.value.referralCode)
-      .then(() => {
-        linkIsInBuffer.value = true;
-        setTimeout(() => linkIsInBuffer.value = false, 1000 * 10);
-      });
-  }
+function copyRefLink() {
+  if (!user.value || linkIsInBuffer.value) return
+  const base = process.env.REF_BASE ?? ''
+  navigator.clipboard
+    .writeText(base + '?referralCode=' + user.value.referralCode)
+    .then(() => {
+      linkIsInBuffer.value = true
+      setTimeout(() => (linkIsInBuffer.value = false), 1000 * 10)
+    })
+}
 </script>
 
 <style lang="scss" scoped></style>

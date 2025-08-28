@@ -11,16 +11,22 @@
               Введите номер телефона
             </div>
             <base-input
-              name="phone"
+              name="телефон"
               type="tel"
               v-model="phone"
               maska="+7 (###)-###-##-##"
-              placeholder="+7 (000)-000-00-00"
+              placeholder="+7"
               class="tw-mb-5"
               unMask
               rules="cellphone"
             />
-            <base-button type="submit"> Получить код </base-button>
+            <base-button
+              :load="loadSubmit"
+              :disabled="loadSubmit"
+              type="submit"
+            >
+              Получить код
+            </base-button>
           </div>
         </div>
       </Form>
@@ -43,7 +49,9 @@ import { useRouter } from 'vue-router'
 // import { auth, ping } from 'src/api/auth';
 const { phone } = storeToRefs(authStore())
 const router = useRouter()
+const loadSubmit = ref(false)
 const submit = async () => {
+  loadSubmit.value = true
   window.localStorage.setItem('phone', JSON.stringify(phone.value))
   router.push({ name: 'verify' })
   try {
@@ -51,15 +59,17 @@ const submit = async () => {
     // await auth(`+7${phone.value}`)
   } catch (e) {
     console.log(e)
+  } finally {
+    loadSubmit.value = false
   }
   // await authStore().login(0);
 }
 </script>
 <style lang="scss" scoped>
 .page-a {
-  background-image: url('src/assets/images/line1.png');
+  background-image: url('/src/assets/images/line1.png');
   background-size: 435.74px 450.02px;
-  background-position: -18px 50px;
+  background-position: -18px 98px;
   background-repeat: no-repeat;
 }
 </style>

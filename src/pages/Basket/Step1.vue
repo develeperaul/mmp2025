@@ -3,59 +3,64 @@
     <div class="tw-grid tw-content-between tw-h-full tw-pb-10">
       <div>
         <div class="title">Корзина</div>
-        <div class="tw-flex tw-justify-end tw-mb-4">
-          <span class="tw-text-secondary tw-text-sm"> Очистить все </span>
-        </div>
-        <div class="tw-overflow-hidden">
-          <div
-            class="tw-grid tw-gap-4 tw-overflow-auto tw-max-h-[65vh] tw-pb-10"
-          >
-            <div v-for="(orderRedion, index) in basket">
+        <div v-if="Object.keys(basket).length > 0">
+          <div class="tw-flex tw-justify-end tw-mb-4">
+            <span class="tw-text-secondary tw-text-sm"> Очистить все </span>
+          </div>
+          <div class="tw-overflow-hidden">
+            <div
+              class="tw-grid tw-gap-4 tw-overflow-auto tw-max-h-[65vh] tw-pb-10"
+            >
               <div
-                v-for="t in orderRedion"
-                class="tw-bg-white tw-rounded-xl tw-px-5 tw-py-4 tw-grid tw-grid-cols-[53px_1fr] tw-gap-3.5"
+                v-for="(orderRedion, index) in basket"
+                class="tw-grid tw-gap-4"
               >
-                <div>
-                  <img src="src/assets/icons/megafon-sim.svg" alt="" />
-                  <!-- <img src="src/assets/icons/mts-sim.svg" alt="" />
-                  <img src="src/assets/icons/beeline-sim.svg" alt="" /> -->
-                </div>
-                <div class="tw-grid gap-[18px]">
-                  <div class="tw-grid">
-                    <div class="tw-grid tw-grid-cols-[1fr_20px]">
-                      <span class="tw-font-medium tw-text-lg">
-                        {{ t.operator }}
-                      </span>
-                      <base-icon
-                        @click="remove(index, t.id)"
-                        name="close"
-                        class="tw-w-5 tw-h-5 tw-text-back"
-                      />
-                    </div>
-                    <div>
-                      <span> {{ t.name }} </span>
-                      <span> ({{ t.count }}) </span>
-                    </div>
+                <div
+                  v-for="t in orderRedion"
+                  class="tw-bg-white tw-rounded-xl tw-px-5 tw-py-4 tw-grid tw-grid-cols-[53px_1fr] tw-gap-3.5"
+                >
+                  <div>
+                    <img src="~assets/icons/megafon-sim.svg" alt="" />
+                    <!-- <img src="~assets/icons/mts-sim.svg" alt="" />
+                    <img src="~assets/icons/beeline-sim.svg" alt="" /> -->
                   </div>
-                  <div class="tw-grid tw-grid-cols-2">
-                    <div class="tw-grid tw-gap-1">
-                      <span class="tw-text-secondary tw-text-sm">
-                        Абон плата
-                      </span>
-                      <span class="tw-font-medium"
-                        >{{ (+t.cost).toFixed(0) }} ₽/мес</span
-                      >
-                    </div>
-                    <div class="tw-grid tw-gap-1">
-                      <div class="tw-flex tw-gap-1">
-                        <span class="tw-text-secondary tw-text-sm">
-                          Оформление
+                  <div class="tw-grid gap-[18px]">
+                    <div class="tw-grid">
+                      <div class="tw-grid tw-grid-cols-[1fr_20px]">
+                        <span class="tw-font-medium tw-text-lg">
+                          {{ t.operator }}
                         </span>
-                        <div>
-                          <img src="src/assets/icons/warning.svg" alt="" />
-                        </div>
+                        <base-icon
+                          @click="remove(index, t.id)"
+                          name="close"
+                          class="tw-w-5 tw-h-5 tw-text-back"
+                        />
                       </div>
-                      <span class="tw-font-medium">550 ₽</span>
+                      <div>
+                        <span> {{ t.name }} </span>
+                        <span> ({{ t.count }}шт) </span>
+                      </div>
+                    </div>
+                    <div class="tw-grid tw-grid-cols-2">
+                      <div class="tw-grid tw-gap-1">
+                        <span class="tw-text-secondary tw-text-sm">
+                          Абон плата
+                        </span>
+                        <span class="tw-font-medium"
+                          >{{ (+t.cost).toFixed(0) }} ₽/мес</span
+                        >
+                      </div>
+                      <div class="tw-grid tw-gap-1">
+                        <div class="tw-flex tw-gap-1">
+                          <span class="tw-text-secondary tw-text-sm">
+                            Оформление
+                          </span>
+                          <div>
+                            <img src="~assets/icons/warning.svg" alt="" />
+                          </div>
+                        </div>
+                        <span class="tw-font-medium">500 ₽</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -63,11 +68,25 @@
             </div>
           </div>
         </div>
+        <div v-else>Корзина пуста</div>
       </div>
 
       <div class="tw-flex tw-justify-center">
-        <base-button class="!tw-w-fit" @click="createOrder">
+        <base-button
+          class="!tw-w-fit tw-min-w-[250px]"
+          :load="loading"
+          :disabled="loading"
+          @click="createOrder"
+          v-if="Object.keys(basket).length > 0"
+        >
           Перейти к оформлению
+        </base-button>
+        <base-button
+          v-else
+          class="!tw-w-fit tw-min-w-[250px]"
+          @click="router.push({ name: 'tariffs' })"
+        >
+          Перейти к тарифам
         </base-button>
       </div>
     </div>
@@ -88,12 +107,24 @@ const order = computed(() => {
   }
 })
 const router = useRouter()
+const loading = ref(false)
 const createOrder = async () => {
+  loading.value = true
   try {
-    await basketStore().create()
-    router.push({ name: 'delivery' })
+    let isMeg = 0
+    const res = await basketStore().create()
+    if (res) {
+      res.items.forEach((item) => {
+        if (item.mobileTariff) {
+          if (item.mobileTariff.mobileOperator.isMegafon) isMeg = 1
+        }
+      })
+    }
+    router.push({ name: 'delivery', query: { isMeg: isMeg } })
   } catch (e) {
     throw e
+  } finally {
+    loading.value = false
   }
 }
 const remove = (regionId: string | number, id: number) => {

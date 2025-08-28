@@ -1,23 +1,21 @@
 <template>
-  <q-layout view="lhh lpr lFf" class="bg">
+  <q-layout view="lhh lPr lFf" class="bg">
     <q-page-container>
       <router-view class="env-t env-b" />
-      <q-footer
-        class="tw-bg-white dark:tw-bg-dark01 tw-rounded-t-2xl lg:tw-hidden"
-      >
-        <div class="tw-container tw-py-2 tw-pb-4 tw-flex tw-justify-between">
+      <q-footer class="tw-bg-els tw-rounded-t-xl">
+        <div class="tw-container tw-py-4 tw-flex tw-justify-between tw-px-8">
           <router-link
             :to="{ name: 'home' }"
             class="tw-grid tw-justify-items-center tw-gap-0.5"
-            v-slot="{ isActive }"
+            v-slot="{ isExactActive }"
           >
             <BaseIcon
               name="home"
               class="tw-w-6 tw-h-6"
-              :class="[isActive ? 'tw-text-black' : '  tw-text-secondary']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
             />
             <span
-              :class="[isActive ? 'tw-text-black' : '  tw-text-secondary']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
               class="tw-text-xs"
             >
               Главная
@@ -26,15 +24,15 @@
           <router-link
             :to="{ name: 'tariffs' }"
             class="tw-grid tw-justify-items-center tw-gap-0.5"
-            v-slot="{ isActive }"
+            v-slot="{ isExactActive }"
           >
             <BaseIcon
               name="products"
               class="tw-w-6 tw-h-6"
-              :class="[isActive ? 'tw-text-black' : '  tw-text-secondary']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
             />
             <span
-              :class="[isActive ? 'tw-text-secondary' : '  tw-text-black']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
               class="tw-text-xs"
             >
               Тарифы
@@ -43,15 +41,15 @@
           <router-link
             :to="{ name: 'basket' }"
             class="tw-grid tw-justify-items-center tw-gap-0.5"
-            v-slot="{ isActive }"
+            v-slot="{ isExactActive }"
           >
             <BaseIcon
               name="basket"
               class="tw-w-6 tw-h-6"
-              :class="[isActive ? 'tw-text-black' : '  tw-text-secondary']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
             />
             <span
-              :class="[isActive ? 'tw-text-secondary' : '  tw-text-black']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
               class="tw-text-xs"
             >
               Корзина
@@ -60,15 +58,15 @@
           <router-link
             :to="{ name: 'profile' }"
             class="tw-grid tw-justify-items-center tw-gap-0.5"
-            v-slot="{ isActive }"
+            v-slot="{ isExactActive }"
           >
             <BaseIcon
               name="profile"
               class="tw-w-6 tw-h-6"
-              :class="[isActive ? 'tw-text-black' : '  tw-text-secondary']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
             />
             <span
-              :class="[isActive ? 'tw-text-secondary' : '  tw-text-black']"
+              :class="[isExactActive ? 'tw-text-black' : '  tw-text-secondary']"
               class="tw-text-xs"
             >
               Профиль

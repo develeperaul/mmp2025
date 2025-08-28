@@ -17,13 +17,13 @@
           <div class="tw-grid tw-gap-8">
             <div class="device" @click="choiceDevice(0)">
               <div class="device__bg">
-                <img src="src/assets/images/phone.png" alt="" />
+                <img src="~assets/images/phone.png" alt="" />
               </div>
               <div class="device__title">Телефон</div>
             </div>
             <div class="device" @click="choiceDevice(1)">
               <div class="device__bg">
-                <img src="src/assets/images/router.png" alt="" />
+                <img src="~assets/images/router.png" alt="" />
               </div>
               <div class="device__title">Другие устройства</div>
               <div class="device__subtitle">

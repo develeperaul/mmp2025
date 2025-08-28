@@ -5,28 +5,57 @@
       <tab-head v-model="tab" :options="tabs" class="tw-mb-5" />
       <tab-body v-model="tab">
         <tab-content name="1">
-          <div v-if="true" class="tw-grid tw-gap-3">
-            <Order
-              v-for="(order, index) in orders"
-              :key="index"
-              :id="order.ordinalId"
-              :creatEd="
-                dayjs(order.createdAt).locale('ru').format('DD.MM.YYYY')
-              "
-              :receiving="order.receiving?.method.description"
-              @click="openOrder(order)"
-            />
+          <div v-if="loads.orders.load" class="tw-grid tw-gap-3">
+            <q-skeleton
+              v-for="n in 10"
+              class="tw-shrink-0"
+              width="100%"
+              height="110px"
+            ></q-skeleton>
           </div>
-          <div v-else class="tw-flex tw-justify-center tw-mt-20">
-            Список пуст
+          <div v-else>
+            <div v-if="orders.length > 0" class="tw-grid tw-gap-3">
+              <Order
+                v-for="(order, index) in orders"
+                :key="index"
+                :id="order.ordinalId"
+                :creatEd="
+                  dayjs(order.createdAt).locale('ru').format('DD.MM.YYYY')
+                "
+                :receiving="order.receiving?.method.description"
+                @click="openOrder(order)"
+              />
+            </div>
+            <div v-else class="tw-flex tw-justify-center tw-mt-20">
+              Список пуст
+            </div>
           </div>
         </tab-content>
         <tab-content name="2">
-          <div v-if="true" class="tw-grid tw-gap-3">
-            <Order />
+          <div v-if="loads.orders.load" class="tw-grid tw-gap-3">
+            <q-skeleton
+              v-for="n in 10"
+              class="tw-shrink-0"
+              width="100%"
+              height="110px"
+            ></q-skeleton>
           </div>
-          <div v-else class="tw-flex tw-justify-center tw-mt-20">
-            Список пуст
+          <div v-else>
+            <div v-if="orderFinish.length > 0" class="tw-grid tw-gap-3">
+              <Order
+                v-for="(order, index) in orderFinish"
+                :key="index"
+                :id="order.ordinalId"
+                :creatEd="
+                  dayjs(order.createdAt).locale('ru').format('DD.MM.YYYY')
+                "
+                :receiving="order.receiving?.method.description"
+                @click="openOrder(order)"
+              />
+            </div>
+            <div v-else class="tw-flex tw-justify-center tw-mt-20">
+              Список пуст
+            </div>
           </div>
         </tab-content>
       </tab-body>
@@ -43,6 +72,7 @@
           @close="closePopupOrder"
           :id="currentOrderOpen.ordinalId"
           :orderId="currentOrderOpen.id"
+          :order="currentOrderOpen"
           :creatEd="
             dayjs(currentOrderOpen.createdAt).locale('ru').format('DD.MM.YYYY')
           "
@@ -72,6 +102,13 @@ const tabs = [
   },
 ]
 
+const loads = ref({
+  orders: {
+    load: false,
+    message: '',
+  },
+})
+
 const isPopupOrder = ref(false)
 const closePopupOrder = () => {
   isPopupOrder.value = false
@@ -84,8 +121,18 @@ const openOrder = (order: orderT) => {
   currentOrderOpen.value = order
   isPopupOrder.value = true
 }
+
+const orderFinish = computed(() => {
+  return orders.value.filter((o) => o.status.value === 22)
+})
 onMounted(() => {
-  orderStore().orderList()
+  loads.value.orders.load = true
+  Promise.allSettled([
+    orderStore()
+      .orderList()
+      .catch((err) => (loads.value.orders.message = 'Список пуст'))
+      .finally(() => (loads.value.orders.load = false)),
+  ])
 })
 </script>
 <style lang="scss" scoped></style>

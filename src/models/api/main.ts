@@ -107,8 +107,13 @@ export type TariffItemAboutT = {
       text: null | string
     }
     name: null | string
-    abouts: []
-    advantages: { title: string; body: string }[]
+    abouts: { title: string; body: string }[]
+    advantages: {
+      title: string
+      body: string
+      has_icon_crowd: 0 | 1
+      has_icon_lightning: 0 | 1
+    }[]
     regions: {
       id: number
       name: null | string

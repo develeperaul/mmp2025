@@ -109,6 +109,8 @@ watch(currentOpt, (val) => {
   bottom: -10px;
   transform: translateY(100%);
   z-index: 1;
+  z-index: 9999;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.15);
 }
 .search-sel__opts--wrp {
   @apply tw-p-5 tw-grid tw-gap-4;

@@ -28,6 +28,7 @@ export default defineConfig((/* ctx */) => {
       'global-registration',
       'registr-validators',
       'registr-router-hooks',
+      'registr-error-handlers',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css

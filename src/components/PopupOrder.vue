@@ -18,9 +18,9 @@
         class="tw-grid tw-grid-cols-[46px_1fr] tw-gap-2.5 tw-mt-6"
       >
         <div>
-          <img src="src/assets/icons/megafon-sim.svg" alt="" />
-          <!-- <img src="src/assets/icons/mts-sim.svg" alt="" />
-                  <img src="src/assets/icons/beeline-sim.svg" alt="" /> -->
+          <img src="~assets/icons/megafon-sim.svg" alt="" />
+          <!-- <img src="~assets/icons/mts-sim.svg" alt="" />
+                  <img src="~assets/icons/beeline-sim.svg" alt="" /> -->
         </div>
         <div class="tw-grid tw-gap-4">
           <div class=" ">
@@ -42,7 +42,7 @@
           </div>
           <div class="tw-grid tw-gap-1.5">
             <div class="tw-text-secondary tw-text-sm">Оформление</div>
-            <div>{{ cost.activations }} ₽</div>
+            <div>{{ cost.items }} ₽</div>
           </div>
           <div class="tw-grid tw-gap-1.5">
             <div class="tw-text-secondary tw-text-sm">Доставка</div>
@@ -67,10 +67,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import { orderT } from 'src/models/api/delivery'
 import { useRouter } from 'vue-router'
 
 const props = defineProps<{
   id: number
+  order: orderT
   orderId: string
   creatEd: string
   receiving?: string
@@ -113,9 +115,10 @@ const buttons = {
           if (item.mobileTariff.mobileOperator.isMegafon) isMeg = 1
         }
       })
+      basketStore().order = props.order
       router.push({
         name: 'delivery',
-        query: { orderId: props.orderId },
+        query: { orderId: props.orderId, isMeg: isMeg },
       })
     },
   },

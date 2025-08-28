@@ -38,20 +38,23 @@ const props = withDefaults(
 const { inputsLenght } = toRefs(props)
 const emit = defineEmits<{
   (e: 'filled'): void
+  (e: 'unfilled'): void
 }>()
 const inputEl = ref<HTMLInputElement[]>([])
-const arrValue = ref(Array(3))
+const arrValue = ref(Array(4))
 const onInput = (e) => {
+  console.log('onInput')
+
   let value = e.target.value.replace(/[^\d]/gi, '').substring(0, 1)
   e.target.value = value
   inputEl.value.forEach((inp, index) => {
+    codeValue.value = value
     if (value && inp === e.target && inputEl.value.length > index + 1) {
       const nextEl = inputEl.value[index + 1]
-      // console.log(index);
-      codeValue.value = value
+      console.log(value)
       if (inputEl.value[index + 1].value === '') nextEl.focus()
     }
-    if (inp === e.target && inputEl.value.length >= index + 1) {
+    if (inp === e.target && inputEl.value.length - 1 >= index) {
       arrValue.value.splice(index, 1, value)
     }
   })
@@ -80,6 +83,8 @@ watch(arrValue.value, (val, old) => {
   if (arrToString.length === props.inputsLenght) {
     codeValue.value = arrToString
     emit('filled')
+  } else {
+    emit('unfilled')
   }
 })
 

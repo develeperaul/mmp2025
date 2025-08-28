@@ -4,6 +4,7 @@
       <input
         @input="open"
         type="text"
+        :placeholder="placeholder"
         list="stationList"
         v-model="stationSearch"
       />
@@ -35,10 +36,12 @@ import { RegionT } from 'src/models/api/main'
 const selectEl = ref<HTMLElement | null>(null)
 const props = defineProps<{
   stations: RegionT[]
+  placeholder?: string
   currentStation?: RegionT
 }>()
 const emit = defineEmits<{
   (e: 'updateStation', station: RegionT): void
+  (e: 'clear'): void
 }>()
 const sentStation = ref<RegionT | { id: null; name: string }>({
   id: null,
@@ -92,6 +95,7 @@ watch(stationSearch, (val) => {
     filteredStations.value = filterArray
   } else {
     filteredStations.value = props.stations
+    emit('clear')
   }
 })
 watch(receiveStation, (val) => {

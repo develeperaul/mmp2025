@@ -11,6 +11,7 @@ function cellphone(value) {
   // console.log(value);
   // const pattern = /[1-9]\d{8,14}$/;
   console.log(value)
+
   return pattern.test(value)
 }
 

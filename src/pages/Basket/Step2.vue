@@ -6,18 +6,21 @@
           <base-icon
             name="back"
             class="tw-w-6 tw-h-6 tw-text-back tw-absolute tw-left-0 tw-top-6"
+            @click="router.go(-1)"
           />
           <div class="title">Оформление</div>
         </div>
 
         <div class="tw-font-semibold tw-text-lg tw-mb-4">Способ получения</div>
-        <div class="tw-inline-flex tw-gap-2.5 tw-overflow-auto tw-mb-6">
+        <div
+          class="tw-inline-flex tw-gap-2.5 tw-overflow-auto tw-mb-6 no-scrollbar"
+        >
           <div
             class="tw-shrink-0 tw-p-3.5 tw-rounded-lg tw-bg-white tw-border tw-border-white tw-max-w-[120px] tw-grid tw-grid-rows-[35px_1fr]"
             :class="tab === 1 ? ' !tw-border-primary_orange' : ''"
             @click="choice(1)"
           >
-            <img src="src/assets/icons/logo.svg" class="tw-self-center" />
+            <img src="~assets/icons/logo.svg" class="tw-self-center" />
             <div class="tw-text-sm">Самовывоз</div>
           </div>
           <div
@@ -25,7 +28,7 @@
             :class="tab === 5 ? ' !tw-border-primary_orange' : ''"
             @click="choice(5)"
           >
-            <img src="src/assets/icons/sdek.svg" class="tw-self-center" />
+            <img src="~assets/icons/sdek.svg" class="tw-self-center" />
             <div class="tw-text-sm">ПВЗ</div>
           </div>
           <div
@@ -33,7 +36,7 @@
             :class="tab === 6 ? ' !tw-border-primary_orange' : ''"
             @click="choice(6)"
           >
-            <img src="src/assets/icons/sdek.svg" class="tw-self-center" />
+            <img src="~assets/icons/sdek.svg" class="tw-self-center" />
             <div class="tw-text-sm">Курьер</div>
           </div>
           <div
@@ -41,16 +44,19 @@
             :class="tab === 7 ? ' !tw-border-primary_orange' : ''"
             @click="choice(7)"
           >
-            <img src="src/assets/icons/pochta.svg" class="tw-self-center" />
-            <div class="tw-text-sm tw-whitespace-nowrap">Почта России</div>
+            <img src="~assets/icons/pochta.svg" class="tw-self-center" />
+            <div class="tw-text-sm tw-whitespace-nowrap tw-font-medium">
+              Почта России
+            </div>
           </div>
+
           <div
-            v-if="!isMeg"
+            v-if="isMeg != 1"
             class="tw-shrink-0 tw-p-3.5 tw-rounded-lg tw-bg-white tw-border tw-border-white tw-max-w-[120px] tw-grid tw-grid-rows-[35px_1fr]"
             :class="tab === 4 ? ' !tw-border-primary_orange' : ''"
             @click="choice(4)"
           >
-            <img src="src/assets/icons/megafon.svg" class="tw-self-center" />
+            <img src="~assets/icons/megafon.svg" class="tw-self-center" />
             <div class="tw-text-sm tw-whitespace-nowrap">В салоне</div>
           </div>
           <!-- <div
@@ -58,7 +64,7 @@
             :class="tab === 6 ? ' !tw-border-primary_orange' : ''"
             @click="choice(6)"
           >
-            <img src="src/assets/icons/esim.svg" class="tw-self-center" />
+            <img src="~assets/icons/esim.svg" class="tw-self-center" />
             <div class="tw-text-sm tw-whitespace-nowrap">eSIM</div>
           </div> -->
         </div>
@@ -77,10 +83,14 @@
             class="tw-px-5 tw-py-6 tw-flex tw-justify-between tw-items-center tw-text-lg tw-font-medium tw-bg-white tw-rounded-xl"
           >
             <div>Итого к оплате</div>
-            <div>500 ₽</div>
+            <div>{{ order?.cost.total }} ₽</div>
           </div>
 
-          <base-button class="tw-mt-10" @click="getPayment"
+          <base-button
+            class="tw-mt-10"
+            @click="getPayment"
+            :load="loadPayment"
+            :disabled="loadPayment"
             >Оплатить</base-button
           >
         </div>
@@ -129,12 +139,12 @@
             <div class="">
               <div class="tw-mb-2.5 tw-flex tw-items-center tw-justify-between">
                 <div>Доставка</div>
-                <div>{{ receiving }} ₽</div>
+                <div>{{ dataPrice.receiving }} ₽</div>
               </div>
 
               <div class="tw-flex tw-items-center tw-justify-between">
                 <div>Оформление</div>
-                <div>500 ₽</div>
+                <div>{{ dataPrice.items }} ₽</div>
               </div>
             </div>
             <div class="tw-border-b tw-border-stroke tw-my-3.5"></div>
@@ -142,13 +152,15 @@
               class="tw-flex tw-justify-between tw-items-center tw-text-lg tw-font-medium"
             >
               <div>Итого к оплате</div>
-              <div>500 ₽</div>
+              <div>{{ dataPrice.total }} ₽</div>
             </div>
           </div>
 
           <base-button
             class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
             @click="getPayment"
+            :load="loadPayment"
+            :disabled="loadPayment"
             >Оплатить</base-button
           >
         </div>
@@ -160,26 +172,26 @@
         <div>
           <div
             class="tw-font-medium tw-mb-4"
-            v-if="!isOpenChoiceCity && cityCDEK"
+            v-if="!isOpenChoiceCityCourier && cityCDEKCourier"
           >
             <span> Пункт выдачи </span>
-            <span class="tw-text-link" @click="openChoiceCity">
-              г. {{ cityCDEK.name }}
+            <span class="tw-text-link" @click="openChoiceCityCourier">
+              г. {{ cityCDEKCourier.name }}
             </span>
           </div>
           <div class="tw-grid tw-content-start tw-gap-2">
-            <template v-if="isOpenChoiceCity && !cityCDEK">
+            <template v-if="isOpenChoiceCityCourier && !cityCDEKCourier">
               <base-select
-                :model-value="regionCDEK"
+                :model-value="regionCDEKCourier"
                 @update:model-value="getCitiesCurier"
-                :options="regionListCDEK"
+                :options="regionListCDEKCourier"
                 label="Выберите регион"
                 :load="loadRegions"
               />
               <base-select
-                v-if="regionCDEK"
-                :model-value="cityCDEK"
-                :options="citiyListCDEK"
+                v-if="regionCDEKCourier"
+                :model-value="cityCDEKCourier"
+                :options="citiyListCDEKCourier"
                 label="Выберите город"
                 @update:model-value="setCityCurier"
                 :load="loadCities"
@@ -188,18 +200,19 @@
           </div>
         </div>
         <div
-          v-if="!isOpenChoiceCity && cityCDEK"
+          v-if="!isOpenChoiceCityCourier && cityCDEKCourier"
           class="tw-grid tw-content-between tw-h-full"
         >
           <div class="tw-grid tw-grid-cols-2 tw-gap-2.5">
             <base-input
               v-model="addressCDEK.postal"
+              maska="######"
               placeholder="Введите индекс"
               class="tw-col-span-2"
             />
             <base-input
               v-model="addressCDEK.address"
-              placeholder="Введите адрес"
+              placeholder="Введите улицу"
               class="tw-col-span-2"
             />
             <base-input
@@ -212,7 +225,7 @@
           </div>
           <base-button
             v-if="!receivingCourier"
-            class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+            class="tw-mt-5 !tw-w-[250px] tw-mx-auto"
             @click="getReceiving"
           >
             Продолжить</base-button
@@ -223,12 +236,12 @@
             <div class="">
               <div class="tw-mb-2.5 tw-flex tw-items-center tw-justify-between">
                 <div>Доставка</div>
-                <div>{{ receivingCourier }} ₽</div>
+                <div>{{ dataPriceCourier.receiving }} ₽</div>
               </div>
 
               <div class="tw-flex tw-items-center tw-justify-between">
                 <div>Оформление</div>
-                <div>500 ₽</div>
+                <div>{{ dataPriceCourier.items }} ₽</div>
               </div>
             </div>
             <div class="tw-border-b tw-border-stroke tw-my-3.5"></div>
@@ -236,20 +249,24 @@
               class="tw-flex tw-justify-between tw-items-center tw-text-lg tw-font-medium"
             >
               <div>Итого к оплате</div>
-              <div>500 ₽</div>
+              <div>{{ dataPriceCourier.total }} ₽</div>
             </div>
           </div>
 
           <base-button
             class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
             @click="getPayment"
+            :load="loadPayment"
+            :disabled="loadPayment"
             >Оплатить</base-button
           >
         </div>
       </div>
 
       <div v-if="tab === 7" class="type-content">
-        <div class="type-content__title">Почта России</div>
+        <div class="type-content__title tw-font-medium tw-mb-4">
+          Почта России
+        </div>
 
         <div style="display: grid; gap: 15px">
           <base-input
@@ -264,14 +281,113 @@
             class=""
           />
         </div>
-        <base-button
+        <div v-if="receivingPochta && !isPopup" class="tw-mt-5">
+          <div class="tw-px-5 tw-py-6 tw-bg-white tw-rounded-xl">
+            <div class="">
+              <div class="tw-mb-2.5 tw-flex tw-items-center tw-justify-between">
+                <div>Доставка</div>
+                <div>{{ dataPricePochta.receiving }} ₽</div>
+              </div>
+
+              <div class="tw-flex tw-items-center tw-justify-between">
+                <div>Оформление</div>
+                <div>{{ dataPricePochta.items }} ₽</div>
+              </div>
+            </div>
+            <div class="tw-border-b tw-border-stroke tw-my-3.5"></div>
+            <div
+              class="tw-flex tw-justify-between tw-items-center tw-text-lg tw-font-medium"
+            >
+              <div>Итого к оплате</div>
+              <div>{{ dataPricePochta.total }} ₽</div>
+            </div>
+          </div>
+
+          <base-button
+            class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+            @click="getPayment"
+            :load="loadPayment"
+            :disabled="loadPayment"
+            >Оплатить</base-button
+          >
+        </div>
+        <div v-if="!receivingPochta">
+          <base-button
+            v-if="pochta.index_city.length === 6 && pochta.address.length > 3"
+            class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+            @click="getReceiving"
+            >Продолжить</base-button
+          >
+        </div>
+        <!-- <base-button
           v-if="pochta.index_city.length === 6 && pochta.address.length > 3"
           class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
           @click="getPayment"
           >Оплатить</base-button
-        >
+        > -->
       </div>
       <div v-if="tab === 4" class="type-content">
+        <div class="type-content__title tw-font-medium tw-mb-4">Мегафон</div>
+
+        <div style="display: grid; gap: 15px">
+          <base-input
+            v-model="megafon.city"
+            placeholder="Введите город"
+            class=""
+          />
+          <base-input
+            v-model="megafon.address"
+            placeholder="Введите адрес"
+            class=""
+          />
+        </div>
+        <div v-if="receivingMeg && !isPopup" class="tw-mt-5">
+          <div class="tw-px-5 tw-py-6 tw-bg-white tw-rounded-xl">
+            <div class="">
+              <div class="tw-mb-2.5 tw-flex tw-items-center tw-justify-between">
+                <div>Доставка</div>
+                <div>{{ dataPriceMeg.receiving }} ₽</div>
+              </div>
+
+              <div class="tw-flex tw-items-center tw-justify-between">
+                <div>Оформление</div>
+                <div>{{ dataPriceMeg.items }} ₽</div>
+              </div>
+            </div>
+            <div class="tw-border-b tw-border-stroke tw-my-3.5"></div>
+            <div
+              class="tw-flex tw-justify-between tw-items-center tw-text-lg tw-font-medium"
+            >
+              <div>Итого к оплате</div>
+              <div>{{ dataPriceMeg.total }} ₽</div>
+            </div>
+          </div>
+
+          <base-button
+            class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+            @click="getPayment"
+            :load="loadPayment"
+            :disabled="loadPayment"
+            >Оплатить</base-button
+          >
+        </div>
+
+        <div v-if="!receivingMeg">
+          <base-button
+            v-if="megafon.city.length > 3 && megafon.address.length > 3"
+            class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+            @click="getReceiving"
+            >Продолжить</base-button
+          >
+        </div>
+        <!-- <base-button
+          v-if="pochta.index_city.length === 6 && pochta.address.length > 3"
+          class="tw-mt-10 !tw-w-[250px] tw-mx-auto"
+          @click="getPayment"
+          >Оплатить</base-button
+        > -->
+      </div>
+      <!-- <div v-if="tab === 4" class="type-content">
         <div class="type-content__title">Салон Мегафон</div>
 
         <div style="display: grid; gap: 15px">
@@ -292,7 +408,7 @@
           @click="getPayment"
           >Оплатить</base-button
         >
-      </div>
+      </div> -->
       <!-- <div v-if="tab === 2"></div>
       <div v-if="tab === 3"></div>
       <div v-if="tab === 4"></div>
@@ -304,7 +420,9 @@
         <div class="tw-text-body_l tw-grid tw-gap-4 tw-justify-items-center">
           <q-spinner-ios color="orange" size="2em" />
 
-          <div class="tw-whitespace-nowrap">{{ popupMessage }}</div>
+          <div class="tw-whitespace-nowrap" v-if="popupMessage">
+            {{ popupMessage }}
+          </div>
         </div>
       </div>
     </div>
@@ -313,16 +431,19 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
 import { citiesCDEK, PVZCDEK } from 'src/api/delivery'
+import { getOrder } from 'src/api/orders'
 import { RegionT } from 'src/models/api/main'
-import { useRoute } from 'vue-router'
+import { Browser } from '@capacitor/browser'
+import { useRoute, useRouter } from 'vue-router'
 
 const tab = ref(1)
 const $q = useQuasar()
 const route = useRoute()
+const router = useRouter()
 const isMeg = ref(route.query.isMeg)
 const isPopup = ref(false)
 const popupMessage = ref('')
-
+const { order } = storeToRefs(basketStore())
 const region = computed(() => {
   const storageRegion = window.localStorage.getItem('region')
   if (storageRegion) {
@@ -333,17 +454,31 @@ const orderId = ref(route.query.orderId ?? localStorage.getItem('mmp_order_id'))
 const choice = (id: number) => {
   tab.value = id
 }
+const dataPrice = ref({
+  receiving: 0,
+  items: 0,
+  total: 0,
+})
+const dataPriceCourier = ref({
+  receiving: 0,
+  items: 0,
+  total: 0,
+})
 
-const receiving = ref(0)
-const receivingCourier = ref(1)
+const receivingCourier = ref(false)
 const {
   regionCDEK,
+  regionCDEKCourier,
   regionListCDEK,
+  regionListCDEKCourier,
   cityCDEK,
+  cityCDEKCourier,
   citiyListCDEK,
+  citiyListCDEKCourier,
   PVZItemCDEK,
   PVZListCDEK,
 } = storeToRefs(basketStore())
+
 const addressCDEK = ref({
   postal: '',
   address: '',
@@ -353,9 +488,22 @@ const addressCDEK = ref({
   intercom: '',
 })
 
+const receivingPochta = ref(false)
+const dataPricePochta = ref({
+  receiving: 0,
+  items: 0,
+  total: 0,
+})
 const pochta = ref({
   index_city: '',
   address: '',
+})
+
+const receivingMeg = ref(false)
+const dataPriceMeg = ref({
+  receiving: 0,
+  items: 0,
+  total: 0,
 })
 const megafon = ref({
   city: '',
@@ -393,14 +541,14 @@ const getReceiving = async () => {
     }
   }
   if (tab.value === 6) {
-    if (regionCDEK.value && cityCDEK.value) {
+    if (regionCDEKCourier.value && cityCDEKCourier.value) {
       payload.data = {
         ...payload.data,
         cdekPostalCode: addressCDEK.value.postal,
         cdekAddress:
-          regionCDEK.value.name +
+          regionCDEKCourier.value.name +
           ' ' +
-          cityCDEK.value.name +
+          cityCDEKCourier.value.name +
           ' ' +
           addressCDEK.value.address +
           ' ' +
@@ -423,15 +571,34 @@ const getReceiving = async () => {
   //   delay: 1,
   // });
   isPopup.value = true
-  popupMessage.value = 'Рассчитываем доставку'
+  if (tab.value === 1) popupMessage.value = ''
+  else popupMessage.value = 'Рассчитываем доставку'
   try {
     const res = await basketStore().receivingOrder(payload)
-    if (res)
+    if (res) {
       if (tab.value === 5) {
-        receiving.value = res.data.cost.receiving
+        dataPrice.value.items = res.data.cost.items
+        dataPrice.value.receiving = res.data.cost.receiving
+        dataPrice.value.total = res.data.cost.total
       }
-    if (tab.value === 6) {
-      receivingCourier.value = res.data.cost.receiving
+      if (tab.value === 6) {
+        dataPriceCourier.value.items = res.data.cost.items
+        dataPriceCourier.value.receiving = res.data.cost.receiving
+        dataPriceCourier.value.total = res.data.cost.total
+        receivingCourier.value = true
+      }
+      if (tab.value === 7) {
+        dataPricePochta.value.items = res.data.cost.items
+        dataPricePochta.value.receiving = res.data.cost.receiving
+        dataPricePochta.value.total = res.data.cost.total
+        receivingPochta.value = true
+      }
+      if (tab.value === 4) {
+        dataPriceMeg.value.items = res.data.cost.items
+        dataPriceMeg.value.receiving = res.data.cost.receiving
+        dataPriceMeg.value.total = res.data.cost.total
+        receivingMeg.value = true
+      }
     }
   } catch (e) {
     throw e
@@ -466,22 +633,27 @@ const getReceiving = async () => {
   //   .finally(() => {});
 }
 
+const loadPayment = ref(false)
 const getPayment = () => {
+  loadPayment.value = true
   if (orderId.value) {
     if (tab.value === 1) {
-      getReceiving().then((r) => {
-        basketStore()
-          .getLink(orderId.value)
-          .then((r) => {
-            openCapacitorSite(r.data.data.link)
-          })
-      })
+      getReceiving()
+        .then((r) => {
+          basketStore()
+            .getLink(JSON.parse(orderId.value))
+            .then((r) => {
+              openCapacitorSite(r.data.link)
+            })
+        })
+        .finally(() => (loadPayment.value = false))
     } else {
       basketStore()
-        .getLink(orderId.value)
+        .getLink(JSON.parse(orderId.value))
         .then((r) => {
-          openCapacitorSite(r.data.data.link)
+          openCapacitorSite(r.data.link)
         })
+        .finally(() => (loadPayment.value = false))
     }
   }
   // loadPayment.value = true;
@@ -524,20 +696,26 @@ const getPayment = () => {
 
 const openCapacitorSite = async (url) => {
   // открытие браузера
-  alert('open')
-  // Browser.open({ url: url });
-  // Browser.addListener("browserFinished", () => {
-  //   checkStatusPayment();
-  // });
+
+  Browser.open({ url: url })
+  Browser.addListener('browserFinished', () => {
+    checkStatusPayment()
+  })
+  router.push({ name: 'orders' })
 }
-onMounted(() => {
+onMounted(async () => {
   if (route.query.orderId) {
     localStorage.setItem('mmp_order_id', JSON.stringify(route.query.orderId))
   }
+  if (order.value === null && orderId.value) {
+    order.value = (await getOrder(JSON.parse(orderId.value))).data
+  }
   getRegionsCDEK()
+  getRegionsCDEKCourier()
 })
 
 const isOpenChoiceCity = ref(true)
+const isOpenChoiceCityCourier = ref(true)
 
 const loadRegions = ref(false)
 const getRegionsCDEK = async () => {
@@ -553,13 +731,13 @@ const getRegionsCDEK = async () => {
     loadRegions.value = false
   }
 }
-const getRegionsCDEKCurier = async () => {
+const getRegionsCDEKCourier = async () => {
   loadRegions.value = true
-  regionCDEK.value = null
-  cityCDEK.value = null
-  PVZItemCDEK.value = null
+  regionCDEKCourier.value = null
+  cityCDEKCourier.value = null
+
   try {
-    await basketStore().getRegionsCDEK()
+    await basketStore().getRegionsCDEKCourier()
   } catch (e) {
     throw e
   } finally {
@@ -582,13 +760,15 @@ const getCities = async (opt: RegionT) => {
     loadCities.value = false
   }
 }
+
 const getCitiesCurier = async (opt: RegionT) => {
-  regionCDEK.value = opt
+  console.log(opt)
+  regionCDEKCourier.value = opt
   loadCities.value = true
-  cityCDEK.value = null
+  cityCDEKCourier.value = null
 
   try {
-    await basketStore().getCitiesCDEK(opt.id)
+    await basketStore().getCitiesCDEKCourier(opt.id)
   } catch (e) {
     throw e
   } finally {
@@ -596,11 +776,11 @@ const getCitiesCurier = async (opt: RegionT) => {
   }
 }
 const setCityCurier = async (opt: RegionT) => {
-  cityCDEK.value = opt
+  cityCDEKCourier.value = opt
   loadCities.value = true
 
   try {
-    await basketStore().getCitiesCDEK(opt.id)
+    await basketStore().getCitiesCDEKCourier(opt.id)
   } catch (e) {
     throw e
   } finally {
@@ -633,11 +813,39 @@ const openChoiceCity = () => {
   cityCDEK.value = null
   PVZItemCDEK.value = null
   isOpenChoiceCity.value = true
-  receivingCourier.value = 0
+  receivingCourier.value = false
+}
+const openChoiceCityCourier = () => {
+  regionCDEKCourier.value = null
+  cityCDEKCourier.value = null
+  isOpenChoiceCityCourier.value = true
+  receivingCourier.value = false
 }
 watch(cityCDEK, (val) => {
   if (val) isOpenChoiceCity.value = false
   else isOpenChoiceCity.value = true
+})
+watch(cityCDEKCourier, (val) => {
+  if (val) isOpenChoiceCityCourier.value = false
+  else isOpenChoiceCityCourier.value = true
+})
+watchEffect(() => {
+  if (
+    addressCDEK.value.postal &&
+    addressCDEK.value.address &&
+    addressCDEK.value.apartment &&
+    addressCDEK.value.entrance &&
+    addressCDEK.value.floor &&
+    addressCDEK.value.intercom
+  ) {
+    receivingCourier.value = false
+  }
+  if (pochta.value.index_city && pochta.value.address) {
+    receivingPochta.value = false
+  }
+  if (megafon.value.address && megafon.value.city) {
+    receivingMeg.value = false
+  }
 })
 </script>
 <style lang="scss" scoped></style>

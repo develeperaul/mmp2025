@@ -42,7 +42,7 @@
             >
               {{ action.title }}
             </div>
-            <div class="banner-info">
+            <div class="banner-info tw-mx-auto">
               <div class="tw-text-xl tw-leading-[100%]">
                 {{ action.subtitle }}
               </div>
@@ -55,7 +55,7 @@
               />
               <img
                 v-else
-                src="src/assets/icons/logo.png"
+                src="~assets/icons/logo.png"
                 alt=""
                 class="tw-mx-auto"
               />
@@ -72,7 +72,7 @@
         <tab-content name="1">
           <div
             v-if="!loads.tariffs1.message"
-            class="tw-flex tw-flex-nowrap tw-overflow-scroll"
+            class="tw-flex tw-flex-nowrap tw-overflow-scroll no-scrollbar"
           >
             <q-skeleton
               v-if="loads.tariffs1.load"
@@ -81,15 +81,17 @@
               width="310px"
               height="310px"
             ></q-skeleton>
-
-            <Tariff
-              v-else
-              v-for="tariff in smTarrifs"
-              :tariff="tariff"
-              tab="1"
-              link
-              class="tw-shrink-0 tw-ml-4"
-            />
+            <template v-else>
+              <Tariff
+                v-if="smTarrifs.length > 0"
+                v-for="tariff in smTarrifs"
+                :tariff="tariff"
+                tab="1"
+                link
+                class="tw-shrink-0 tw-ml-4"
+              />
+              <div class="tw-mx-auto" v-else>Список пуст</div>
+            </template>
           </div>
           <div
             v-else
@@ -101,7 +103,7 @@
         <tab-content name="2">
           <div
             v-if="!loads.tariffs2.message"
-            class="tw-flex tw-flex-nowrap tw-overflow-scroll"
+            class="tw-flex tw-flex-nowrap tw-overflow-scroll no-scrollbar"
           >
             <q-skeleton
               v-if="loads.tariffs2.load"
@@ -110,14 +112,17 @@
               width="310px"
               height="310px"
             ></q-skeleton>
-            <Tariff
-              v-else
-              v-for="tariff in intTarrifs"
-              :tariff="tariff"
-              tab="2"
-              link
-              class="tw-shrink-0 tw-ml-4"
-            />
+            <template v-else>
+              <Tariff
+                v-if="intTarrifs.length > 0"
+                v-for="tariff in intTarrifs"
+                :tariff="tariff"
+                tab="2"
+                link
+                class="tw-shrink-0 tw-ml-4"
+              />
+              <div class="tw-mx-auto" v-else>Список пуст</div>
+            </template>
           </div>
           <div
             v-else
@@ -128,7 +133,7 @@
         <tab-content name="3">
           <div
             v-if="!loads.tariffs3.message"
-            class="tw-flex tw-flex-nowrap tw-overflow-scroll"
+            class="tw-flex tw-flex-nowrap tw-overflow-scroll no-scrollbar"
           >
             <q-skeleton
               v-if="loads.tariffs3.load"
@@ -137,14 +142,17 @@
               width="310px"
               height="310px"
             ></q-skeleton>
-            <Tariff
-              v-else
-              v-for="tariff in actTarrifs"
-              :tariff="tariff"
-              tab="3"
-              link
-              class="tw-shrink-0 tw-ml-4"
-            />
+            <template v-else>
+              <Tariff
+                v-if="actTarrifs.length > 0"
+                v-for="tariff in actTarrifs"
+                :tariff="tariff"
+                tab="3"
+                link
+                class="tw-shrink-0 tw-ml-4"
+              />
+              <div class="tw-mx-auto" v-else>Список пуст</div>
+            </template>
           </div>
           <div
             v-else
@@ -157,6 +165,7 @@
 
     <div
       class="black_gradient tw-rounded-xl tw-px-5 tw-flex tw-items-center tw-justify-between tw-h-fit"
+      @click="router.push({ name: 'ref' })"
     >
       <div class="tw-text-h3 tw-text-white tw-font-semibold">
         Приглашайте друзей <br />
@@ -267,14 +276,14 @@ onMounted(async () => {
       .finally(() => (loads.value.tariffs1.load = false)),
     mainStore()
       .getTariffs({
-        'applyingDeviceTypes[]': '1',
+        'applyingDeviceTypes[]': '2',
       })
       .then((r) => (intTarrifs.value = r))
       .catch((err) => (loads.value.tariffs2.message = 'Список пуст'))
       .finally(() => (loads.value.tariffs2.load = false)),
     mainStore()
       .getTariffs({
-        isPromoted: 'true',
+        isPromoted: '1',
       })
       .then((r) => (actTarrifs.value = r))
       .catch((err) => (loads.value.tariffs3.message = 'Список пуст'))

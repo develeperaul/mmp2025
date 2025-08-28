@@ -4,7 +4,7 @@
       <div class="success__content">
         <img
           class="success__img"
-          src="src/assets/images/check2.png"
+          src="~assets/images/check2.png"
           alt=""
           width="153"
           height="153"
@@ -26,19 +26,19 @@
 </template>
 
 <script setup lang="ts">
-  const showed = defineModel<boolean>({ default: false });
+const showed = defineModel<boolean>({ default: false })
 </script>
 
 <style lang="scss" scoped>
-  .success {
-    z-index: 1000;
-    @apply tw-bg-base tw-absolute tw-top-0 tw-left-0 tw-w-full tw-h-full;
+.success {
+  z-index: 1000;
+  @apply tw-bg-base tw-absolute tw-top-0 tw-left-0 tw-w-full tw-h-full;
 
-    &__content {
-      @apply tw-bg-white tw-rounded-xl tw-w-full tw-pb-[34px] tw-grid tw-justify-items-center tw-text-center;
-    }
-    &__img {
-      @apply tw-translate-y-[-78px] tw-mb-[-78px];
-    }
+  &__content {
+    @apply tw-bg-white tw-rounded-xl tw-w-full tw-pb-[34px] tw-grid tw-justify-items-center tw-text-center;
   }
+  &__img {
+    @apply tw-translate-y-[-78px] tw-mb-[-78px];
+  }
+}
 </style>

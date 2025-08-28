@@ -10,7 +10,8 @@
         Поддержка
       </div>
       <div class="tw-grid tw-grid-cols-2 tw-gap-2.5">
-        <div
+        <a
+          href="tel:+79371553030"
           class="black_gradient tw-pt-[28px] tw-px-4 tw-pb-4 tw-rounded-xl tw-grid tw-gap-3.5 tw-text-white tw-text-body_s"
         >
           <svg
@@ -42,8 +43,9 @@
           </svg>
 
           Позвонить
-        </div>
-        <div
+        </a>
+        <a
+          href="https://t.me/mmpartner_bot"
           class="black_gradient tw-pt-[28px] tw-px-4 tw-pb-4 tw-rounded-xl tw-grid tw-gap-3.5 tw-text-white tw-text-body_s"
         >
           <svg
@@ -73,7 +75,7 @@
           </svg>
 
           Telegram-бот
-        </div>
+        </a>
       </div>
     </div>
   </div>
